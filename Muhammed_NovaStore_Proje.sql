@@ -22,3 +22,13 @@ CREATE TABLE
         City VARCHAR(20),
         Email VARCHAR(100) UNIQUE
     );
+-- Products Tablosu
+CREATE TABLE
+    Products (
+        ProductID INT IDENTITY (1, 1) PRIMARY KEY,
+        ProductName VARCHAR(100) NOT NULL,
+        Price DECIMAL(10, 2),
+        Stock INT DEFAULT 0,
+        CategoryID INT,
+        CONSTRAINT FK_Products_Categories FOREIGN KEY (CategoryID) REFERENCES Categories (CategoryID)
+    );
