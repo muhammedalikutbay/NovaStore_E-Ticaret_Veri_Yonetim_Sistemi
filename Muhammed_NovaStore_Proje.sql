@@ -43,3 +43,14 @@ CREATE TABLE
         TotalAmount DECIMAL(10, 2),
         CONSTRAINT FK_Orders_Customers FOREIGN KEY (CustomerID) REFERENCES Customers (CustomerID)
     );
+
+-- OrderDetails Tablosu
+CREATE TABLE
+    OrderDetails (
+        DetailID INT IDENTITY (1, 1) PRIMARY KEY,
+        OrderID INT,
+        ProductID INT,
+        Quantity INT,
+        CONSTRAINT FK_OrderDetails_Orders FOREIGN KEY (OrderID) REFERENCES Orders (OrderID),
+        CONSTRAINT FK_OrderDetails_Products FOREIGN KEY (ProductID) REFERENCES Products (ProductID)
+    );
