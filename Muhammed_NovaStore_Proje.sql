@@ -183,4 +183,16 @@ GROUP BY
 ORDER BY
     UrunSayisi DESC;
 
+-- Ciro Analizi: Her müşterinin şirkete kazandırdığı toplam ciroyu, en çok harcama yapandan en aza doğru sıralar.   
+SELECT
+    c.FullName,
+    SUM(o.TotalAmount) AS ToplamCiro
+FROM
+    Customers c
+    INNER JOIN Orders o ON c.CustomerID = o.CustomerID
+GROUP BY
+    c.FullName
+ORDER BY
+    ToplamCiro DESC;
+
 -- #endregion
