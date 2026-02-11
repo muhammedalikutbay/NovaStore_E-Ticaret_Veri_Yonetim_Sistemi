@@ -225,4 +225,85 @@ SELECT
 FROM
     vw_SiparisOzet;
 
+-- Databace Backup Script
+
+DECLARE @BackupFolder NVARCHAR(260) = N'C:\Yedek'; -- Yedeklerin kaydedileceği klasör yolu
+DECLARE @BackupPath NVARCHAR(400); -- Yedek dosyasının tam yolu (klasör + dosya adı)
+DECLARE @Date NVARCHAR(20); -- Yedek dosyasına tarih eklemek için kullanılacak değişken
+
+-- Database var mı kontrolü, Database mevcut değilse işlem durdurulur.
+IF DB_ID(N'NovaStoreDB') IS NULL
+BEGIN
+    RAISERROR('NovaStoreDB does not exist.', 16, 1); -- Database yoksa hata mesajı verir
+    RETURN;
+END
+-- Database ONLINE mı kontrolü, Offline / Restoring durumunda backup alınamaz.
+IF EXISTS (
+    SELECT 1 -- Kayda değer eklenmez, sadece varlık kontrolü yapılır
+    FROM sys.databases -- SQL Server’ın sistem görünümüdür, Sunucudaki tüm veritabanlarının bilgilerini tutar.
+    WHERE name = N'NovaStoreDB' -- Veritabanı adı
+      AND state_desc <> 'ONLINE' -- Eğer veritabanı ONLINE değilse…
+)
+BEGIN
+    RAISERROR('NovaStoreDB is not ONLINE.', 16, 1); -- Veritabanı ONLINE değilse hata mesajı verir
+    RETURN;
+END
+-- Tarih formatı oluştur (YYYYMMDD_HHMMSS), Aynı isimli dosya çakışmasını engeller.
+SELECT @Date =
+REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(19), GETDATE(), 120), '-', ''), ' ', '_'), ':', '');
+
+SET @BackupPath =
+@BackupFolder + N'\NovaStoreDB_Backup_' + @Date + N'.bak'; -- Yedek dosyasının tam yolu (örneğin: C:\Yedek\NovaStoreDB_Backup_20260201_153000.bak)
+
+-- C diskinde Yedek Klasör yoksa oluşturmayı dene, xp_create_subdir bazı sistemlerde kapalı olabilir.Hata oluşursa backup aşamasında yakalanacaktır.
+BEGIN TRY
+    EXEC master.dbo.xp_create_subdir @BackupFolder;
+END TRY
+BEGIN CATCH
+    -- Klasör zaten varsa veya yetki yoksa burada sessiz geçilir
+END CATCH
+
+-- Backup işlemi. FORMAT kullanılmadı (media header silme riskine karşı)
+
+BEGIN TRY
+
+    BACKUP DATABASE NovaStoreDB
+    TO DISK = @BackupPath
+    WITH 
+        INIT,-- dosya varsa üzerine yazar
+        COMPRESSION,-- disk alanı tasarrufu sağlar
+        CHECKSUM, -- veri bütünlüğü kontrolü yapar
+        STATS = 10; -- ilerleme durumunu %10 aralıklarla gösterir
+
+    PRINT 'Backup completed successfully.';
+    PRINT 'Backup file: ' + @BackupPath;
+
+END TRY
+BEGIN CATCH
+
+    PRINT 'Backup failed.';
+    PRINT ERROR_MESSAGE();
+    RETURN;
+
+END CATCH
+
+-- Backup doğrulama, oluşturulan yedeğin bozuk olup olmadığını kontrol eder.
+BEGIN TRY
+
+    RESTORE VERIFYONLY -- Yedek dosyasının doğruluğunu kontrol eder, geri yükleme yapmaz
+    FROM DISK = @BackupPath 
+    WITH CHECKSUM;
+
+    PRINT 'Backup verification successful.';
+
+END TRY
+BEGIN CATCH
+
+    PRINT 'Backup verification failed.';
+    PRINT ERROR_MESSAGE();
+
+END CATCH;
+GO
+
+
 --#endregion
