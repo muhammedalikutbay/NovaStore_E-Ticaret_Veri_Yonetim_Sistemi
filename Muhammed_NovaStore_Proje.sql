@@ -132,3 +132,17 @@ VALUES
     (8, 2, 1);
 
 -- #endregion
+-- #region BÖLÜM 3 - DQL (Data Query Language)
+-- Temel Listeleme:Stok miktarı 20'den az olan ürünlerin adını ve stok miktarını, stok miktarına göre "AZALAN" sırada listeler.
+
+SELECT
+    ProductName,
+    Stock
+FROM
+    Products
+WHERE
+    Stock < 20
+ORDER BY
+    Stock DESC;
+
+-- #endregion
