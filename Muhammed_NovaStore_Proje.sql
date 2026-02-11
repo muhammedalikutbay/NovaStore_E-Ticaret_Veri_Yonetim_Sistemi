@@ -134,7 +134,6 @@ VALUES
 -- #endregion
 -- #region BÖLÜM 3 - DQL (Data Query Language)
 -- Temel Listeleme:Stok miktarı 20'den az olan ürünlerin adını ve stok miktarını, stok miktarına göre "AZALAN" sırada listeler.
-
 SELECT
     ProductName,
     Stock
@@ -144,5 +143,17 @@ WHERE
     Stock < 20
 ORDER BY
     Stock DESC;
+
+-- Veri Birleştirme (JOIN):: Hangi müşteri, hangi tarihte sipariş vermiş? Sonuçta Müşteri Adı, Şehir, Sipariş Tarihi ve Toplam Tutar gözükür.
+SELECT
+    c.FullName,
+    c.City,
+    o.OrderDate,
+    o.TotalAmount
+FROM
+    Orders o
+    INNER JOIN Customers c ON o.CustomerID = c.CustomerID
+ORDER BY
+    o.OrderDate;
 
 -- #endregion
