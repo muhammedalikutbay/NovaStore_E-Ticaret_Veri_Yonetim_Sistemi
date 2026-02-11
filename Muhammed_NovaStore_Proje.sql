@@ -174,25 +174,33 @@ WHERE
 -- Gruplama ve Aggregate Fonksiyonlar: Hangi kategoride toplam kaç adet ürün olduğunu listeler.
 SELECT
     cat.CategoryName,
-    COUNT(p.ProductID) AS UrunSayisi
+    COUNT(p.ProductID) AS ProductCount
 FROM
     Categories cat
     LEFT JOIN Products p ON cat.CategoryID = p.CategoryID
 GROUP BY
     cat.CategoryName
 ORDER BY
-    UrunSayisi DESC;
+    ProductCount DESC;
 
 -- Ciro Analizi: Her müşterinin şirkete kazandırdığı toplam ciroyu, en çok harcama yapandan en aza doğru sıralar.   
 SELECT
     c.FullName,
-    SUM(o.TotalAmount) AS ToplamCiro
+    SUM(o.TotalAmount) AS TotalRevenue
 FROM
     Customers c
     INNER JOIN Orders o ON c.CustomerID = o.CustomerID
 GROUP BY
     c.FullName
 ORDER BY
-    ToplamCiro DESC;
+    TotalRevenue DESC;
+
+-- Zaman Analizi:Bugünün tarihine göre, siparişlerin üzerinden kaç gün geçtiğini hesaplayan bir sorgu.
+SELECT
+    OrderID,
+    OrderDate,
+    DATEDIFF (DAY, OrderDate, GETDATE ()) AS DaysSinceOrder
+FROM
+    Orders;
 
 -- #endregion
