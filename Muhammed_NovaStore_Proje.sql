@@ -171,4 +171,16 @@ FROM
 WHERE
     c.FullName = 'Ahmet Yılmaz';
 
+-- Gruplama ve Aggregate Fonksiyonlar: Hangi kategoride toplam kaç adet ürün olduğunu listeler.
+SELECT
+    cat.CategoryName,
+    COUNT(p.ProductID) AS UrunSayisi
+FROM
+    Categories cat
+    LEFT JOIN Products p ON cat.CategoryID = p.CategoryID
+GROUP BY
+    cat.CategoryName
+ORDER BY
+    UrunSayisi DESC;
+
 -- #endregion
