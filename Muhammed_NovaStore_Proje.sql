@@ -22,6 +22,7 @@ CREATE TABLE
         City VARCHAR(20),
         Email VARCHAR(100) UNIQUE
     );
+
 -- Products Tablosu
 CREATE TABLE
     Products (
@@ -31,4 +32,14 @@ CREATE TABLE
         Stock INT DEFAULT 0,
         CategoryID INT,
         CONSTRAINT FK_Products_Categories FOREIGN KEY (CategoryID) REFERENCES Categories (CategoryID)
+    );
+
+-- Orders Tablosu
+CREATE TABLE
+    Orders (
+        OrderID INT IDENTITY (1, 1) PRIMARY KEY,
+        CustomerID INT,
+        OrderDate DATETIME DEFAULT GETDATE (),
+        TotalAmount DECIMAL(10, 2),
+        CONSTRAINT FK_Orders_Customers FOREIGN KEY (CustomerID) REFERENCES Customers (CustomerID)
     );
