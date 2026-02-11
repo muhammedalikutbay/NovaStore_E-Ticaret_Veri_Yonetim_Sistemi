@@ -156,4 +156,19 @@ FROM
 ORDER BY
     o.OrderDate;
 
+-- Çoklu Birleştirme ve Detay Raporu:müşterinin aldığı ürünlerin isimlerini, fiyatlarını ve kategorilerini listeler.
+SELECT
+    c.FullName,
+    p.ProductName,
+    p.Price,
+    cat.CategoryName
+FROM
+    Customers c
+    INNER JOIN Orders o ON c.CustomerID = o.CustomerID
+    INNER JOIN OrderDetails od ON o.OrderID = od.OrderID
+    INNER JOIN Products p ON od.ProductID = p.ProductID
+    INNER JOIN Categories cat ON p.CategoryID = cat.CategoryID
+WHERE
+    c.FullName = 'Ahmet Yılmaz';
+
 -- #endregion
