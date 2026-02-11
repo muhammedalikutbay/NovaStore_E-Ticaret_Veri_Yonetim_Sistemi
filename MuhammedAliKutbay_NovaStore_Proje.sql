@@ -204,3 +204,25 @@ FROM
     Orders;
 
 -- #endregion
+-- #region BÖLÜM 4 - İleri Seviye Veri Tabanı Nesneleri
+-- VIEW: Sipariş Özet Görünümü
+CREATE VIEW
+    vw_SiparisOzet AS
+SELECT
+    c.FullName,
+    o.OrderDate,
+    p.ProductName,
+    od.Quantity
+FROM
+    Customers c
+    INNER JOIN Orders o ON c.CustomerID = o.CustomerID
+    INNER JOIN OrderDetails od ON o.OrderID = od.OrderID
+    INNER JOIN Products p ON od.ProductID = p.ProductID;
+
+-- View kontrol sorgusu
+SELECT
+    *
+FROM
+    vw_SiparisOzet;
+
+--#endregion
