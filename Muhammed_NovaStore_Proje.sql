@@ -1,6 +1,7 @@
 -- Veri Tabanı Oluşturma
 CREATE DATABASE NovaStoreDB;
 
+-- #region BÖLÜM 1 - DDL (Data Definition Language)
 GO
 -- Veri Tabanını Kullanma
 USE NovaStoreDB;
@@ -54,3 +55,80 @@ CREATE TABLE
         CONSTRAINT FK_OrderDetails_Orders FOREIGN KEY (OrderID) REFERENCES Orders (OrderID),
         CONSTRAINT FK_OrderDetails_Products FOREIGN KEY (ProductID) REFERENCES Products (ProductID)
     );
+
+-- #endregion
+-- #region BÖLÜM 2 - DML (Data Manipulation Language)
+USE NovaStoreDB;
+
+GO
+-- 1. KATEGORİLER
+INSERT INTO
+    Categories (CategoryName)
+VALUES
+    ('Elektronik'),
+    ('Giyim'),
+    ('Kitap'),
+    ('Kozmetik'),
+    ('Ev ve Yaşam');
+
+-- ÜRÜNLER
+INSERT INTO
+    Products (ProductName, Price, Stock, CategoryID)
+VALUES
+    -- Elektronik
+    ('Laptop', 25000, 15, 1),
+    ('Akıllı Telefon', 18000, 25, 1),
+    ('Bluetooth Kulaklık', 1200, 40, 1),
+    -- Giyim
+    ('T-Shirt', 350, 60, 2),
+    ('Kot Pantolon', 900, 30, 2),
+    -- Kitap
+    ('SQL Öğreniyorum', 250, 20, 3),
+    ('Veri Bilimi 101', 300, 18, 3),
+    -- Kozmetik
+    ('Parfüm', 1500, 12, 4),
+    ('Yüz Temizleme Jeli', 200, 50, 4),
+    -- Ev ve Yaşam
+    ('Kahve Makinesi', 3200, 8, 5),
+    ('Masa Lambası', 450, 22, 5),
+    ('Halı', 2000, 5, 5);
+
+-- MÜŞTERİLER
+INSERT INTO
+    Customers (FullName, City, Email)
+VALUES
+    ('Ahmet Yılmaz', 'İstanbul', 'ahmet@gmail.com'),
+    ('Ayşe Demir', 'Ankara', 'ayse@gmail.com'),
+    ('Mehmet Kaya', 'İzmir', 'mehmet@gmail.com'),
+    ('Zeynep Şahin', 'Bursa', 'zeynep@gmail.com'),
+    ('Can Karaca', 'Antalya', 'can@gmail.com'),
+    ('Elif Arslan', 'Adana', 'elif@gmail.com');
+
+-- SİPARİŞLER
+INSERT INTO
+    Orders (CustomerID, OrderDate, TotalAmount)
+VALUES
+    (1, '2026-02-01', 26200),
+    (2, '2026-02-02', 1250),
+    (3, '2026-02-03', 300),
+    (1, '2026-02-05', 1500),
+    (4, '2026-02-06', 350),
+    (5, '2026-02-07', 3200),
+    (6, '2026-02-08', 2000),
+    (2, '2026-02-09', 18000);
+
+-- SİPARİŞ DETAYLARI
+INSERT INTO
+    OrderDetails (OrderID, ProductID, Quantity)
+VALUES
+    (1, 1, 1),
+    (1, 3, 1),
+    (2, 4, 2),
+    (3, 7, 1),
+    (4, 8, 1),
+    (5, 4, 1),
+    (6, 10, 1),
+    (7, 12, 1),
+    (8, 2, 1);
+
+-- #endregion
