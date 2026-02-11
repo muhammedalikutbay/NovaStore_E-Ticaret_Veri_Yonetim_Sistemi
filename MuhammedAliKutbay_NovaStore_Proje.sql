@@ -218,7 +218,7 @@ FROM
     INNER JOIN Orders o ON c.CustomerID = o.CustomerID
     INNER JOIN OrderDetails od ON o.OrderID = od.OrderID
     INNER JOIN Products p ON od.ProductID = p.ProductID;
-
+GO  -- "CREATE VIEW must be the only statement in the batch" hatası nedeniyle komutu ayrı bir batch olarak çalıştırmak için eklendi
 -- View kontrol sorgusu
 SELECT
     *
